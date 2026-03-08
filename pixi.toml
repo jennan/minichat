@@ -15,12 +15,3 @@ python = "3.12.*"
 strands-agents = { version = ">=1.29", extras = ["litellm"] }
 mlflow = { version = "*", extras = ["genai"] }
 streamlit = "*"
-
-[feature.ollama.dependencies]
-ollama = "*"
-
-[feature.ollama.tasks]
-ollama = { cmd = "ollama", default-environment = "ollama" }
-
-[environments]
-ollama = { features = ["ollama"], no-default-feature = true }

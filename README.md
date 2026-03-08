@@ -6,7 +6,7 @@ This repository is a tiny experiment where I put together few toolboxes together
 - `strands` for the agentic aspects,
 - `mlflow` for the trace and evaluation,
 - `litellm` proxy to support multiple backends and control budget,
-- `ollama` as default local LLM backend,
+- `vllm` as default local LLM backend,
 - `nginx` to add basic authentication and url remapping, 
 - `docker-compose` to orchestrate the services.
 
@@ -14,16 +14,20 @@ This repository is a tiny experiment where I put together few toolboxes together
 
 No need to start everything when developing, just run ollama and the app:
 
-- in a first terminal, run ollama server
+- in a first terminal, run vllm server
 
 ```bash
-pixi run ollama serve
+podman run \
+  --device nvidia.com/gpu=all \
+  -v ~/.cache/huggingface:/root/.cache/huggingface \
+  -p 8000:8000 \
+  --ipc=host \
+  docker.io/vllm/vllm-openai:latest --model Qwen/Qwen3-0.6B --reasoning-parser qwen3
 ```
 
-- in *another* terminal, pull a model then start the app:
+- in *another* terminal, start the app:
 
 ```bash
-pixi run ollama pull phi3:mini-4k
 pixi run chatbot
 ```
 
