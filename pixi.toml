@@ -1,0 +1,26 @@
+[workspace]
+authors = ["Maxime RIO <maxime.rio@niwa.co.nz>"]
+channels = ["conda-forge"]
+name = "test"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+chatbot = "streamlit run app.py"
+
+[dependencies]
+python = "3.12.*"
+
+[pypi-dependencies]
+strands-agents = { version = ">=1.29", extras = ["litellm"] }
+mlflow = { version = "*", extras = ["genai"] }
+streamlit = "*"
+
+[feature.ollama.dependencies]
+ollama = "*"
+
+[feature.ollama.tasks]
+ollama = { cmd = "ollama", default-environment = "ollama" }
+
+[environments]
+ollama = { features = ["ollama"], no-default-feature = true }
