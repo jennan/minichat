@@ -1,0 +1,26 @@
+services:
+  chatbot:
+    build: .
+    ports:
+      - "8501:8501"
+
+  vllm:
+    image: docker.io/vllm/vllm-openai:latest
+    container_name: vllm-server
+    expose:
+      - "8000"
+    volumes:
+      - ~/.cache/huggingface:/root/.cache/huggingface
+    ipc: host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: 
+      - "--model"
+      - "Qwen/Qwen3-0.6B"
+      - "--reasoning-parser"
+      - "qwen3"

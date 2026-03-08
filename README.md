@@ -40,3 +40,7 @@ pixi run mlflow server
 ## Deployment mode
 
 TODO setup docker-compose to run all services
+
+```bash
+podman compose up
+```
