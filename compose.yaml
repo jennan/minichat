@@ -3,12 +3,15 @@ services:
     build: .
     ports:
       - "8501:8501"
+    environment:
+      MODEL_ID: "hosted_vllm/Qwen/Qwen3-0.6B"
+      BASE_URL: "http://vllm:8000/v1"
 
   vllm:
     image: docker.io/vllm/vllm-openai:latest
     container_name: vllm-server
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
     volumes:
       - ~/.cache/huggingface:/root/.cache/huggingface
     ipc: host

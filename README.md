@@ -8,13 +8,13 @@ This repository is a tiny experiment where I put together few toolboxes together
 - `litellm` proxy to support multiple backends and control budget,
 - `vllm` as default local LLM backend,
 - `nginx` to add basic authentication and url remapping, 
-- `docker-compose` to orchestrate the services.
+- `podman-compose` to orchestrate the services.
 
 ## Development mode
 
 No need to start everything when developing, just run ollama and the app:
 
-- in a first terminal, run vllm server
+- in a first terminal, run the vllm server
 
 ```bash
 podman run \
@@ -28,6 +28,8 @@ podman run \
 - in *another* terminal, start the app:
 
 ```bash
+export MODEL_ID="hosted_vllm/Qwen/Qwen3-0.6B"
+export BASE_URL="http://localhost:8000/v1"
 pixi run chatbot
 ```
 

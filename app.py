@@ -24,10 +24,10 @@ mlflow.set_experiment("Test Experiment")
 mlflow.strands.autolog()
 
 if "agent" not in st.session_state:
-    model = LiteLLMModel(
-        model_id="hosted_vllm/Qwen/Qwen3-0.6B",
-        client_args={"base_url": "http://localhost:8000/v1"},
-    )
+    model_id = os.environ["MODEL_ID"]
+    base_url = os.environ["BASE_URL"]
+
+    model = LiteLLMModel(model_id=model_id, client_args={"base_url": base_url})
     #model = LiteLLMModel(
     #    client_args={
     #        "api_key": "sk-1234",
