@@ -1,17 +1,10 @@
 services:
-  chatbot:
-    build: .
-    ports:
-      - "8501:8501"
-    environment:
-      MODEL_ID: "hosted_vllm/Qwen/Qwen3-0.6B"
-      BASE_URL: "http://vllm:8000/v1"
 
   vllm:
     image: docker.io/vllm/vllm-openai:latest
     container_name: vllm-server
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     volumes:
       - ~/.cache/huggingface:/root/.cache/huggingface
     ipc: host
@@ -22,8 +15,23 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-    command: 
-      - "--model"
-      - "Qwen/Qwen3-0.6B"
-      - "--reasoning-parser"
-      - "qwen3"
+    command: --model "Qwen/Qwen3-0.6B" --reasoning-parser qwen3
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:v3.10.1-full
+    container_name: mlflow-server
+    ports:
+      - "5000:5000"  # TODO switch to expose once nginx is added
+    command: mlflow server --host 0.0.0.0 --disable-security-middleware
+
+  chatbot:
+    build: .
+    ports:
+      - "8501:8501"  # TODO switch to expose once nginx is added
+    environment:
+      MODEL_ID: "hosted_vllm/Qwen/Qwen3-0.6B"
+      BASE_URL: "http://vllm:8000/v1"
+      MLFLOW_TRACKING_URI: "http://mlflow:5000"
+    depends_on:
+      - vllm
+      - mlflow

@@ -12,7 +12,7 @@ This repository is a tiny experiment where I put together few toolboxes together
 
 ## Development mode
 
-No need to start everything when developing, just run ollama and the app:
+No need to start everything when developing, just run vllm and the app:
 
 - in a first terminal, run the vllm server
 

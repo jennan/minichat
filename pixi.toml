@@ -1,7 +1,7 @@
 [workspace]
 authors = ["Maxime RIO <maxime.rio@niwa.co.nz>"]
 channels = ["conda-forge"]
-name = "test"
+name = "minichat"
 platforms = ["linux-64"]
 version = "0.1.0"
 
