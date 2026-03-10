@@ -11,16 +11,23 @@ This repository is a tiny experiment where I put together few toolboxes together
 
 ## Development mode
 
-No need to start everything when developing, just run ollama and the app in a terminal:
+No need to start everything when developing, just run ollama and the app:
+
+- in a first terminal, run the ollama server:
 
 ```bash
-podman run -d --gpus all -v ollama:/root/.ollama -p 11434:11434 --name ollama-gpu docker.io/ollama/ollama:latest
-podman exec -it ollama-gpu ollama pull tinyllama:latest
-MODEL_ID="tinyllama:latest" pixi run chatbot
-podman stop ollama-gpu
+pixi run ollama serve
 ```
 
-Optionally, in *another* terminal run mlflow server to check saved traces:
+- in *another* terminal, pull a model and start the app
+
+```bash
+export MODEL_ID="phi3:mini-4k"
+pixi run ollama pull "$MODEL_ID"
+pixi run chatbot
+```
+
+- (optional), in *another* terminal run mlflow server to check saved traces:
 
 ```bash
 pixi run mlflow server
