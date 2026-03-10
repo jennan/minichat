@@ -12,6 +12,6 @@ chatbot = "streamlit run app.py"
 python = "3.12.*"
 
 [pypi-dependencies]
-strands-agents = { version = ">=1.29", extras = ["litellm"] }
+strands-agents = { version = ">=1.29", extras = ["ollama"] }
 mlflow = { version = "*", extras = ["genai"] }
 streamlit = "*"

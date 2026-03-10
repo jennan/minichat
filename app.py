@@ -5,7 +5,7 @@ os.environ["MLFLOW_USE_DEFAULT_TRACER_PROVIDER"] = "false"
 import mlflow
 import streamlit as st
 from strands import Agent
-from strands.models.litellm import LiteLLMModel
+from strands.models.ollama import OllamaModel
 
 
 @mlflow.trace
@@ -25,16 +25,9 @@ mlflow.strands.autolog()
 
 if "agent" not in st.session_state:
     model_id = os.environ["MODEL_ID"]
-    base_url = os.environ["BASE_URL"]
+    ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 
-    model = LiteLLMModel(model_id=model_id, client_args={"base_url": base_url})
-    #model = LiteLLMModel(
-    #    client_args={
-    #        "api_key": "sk-1234",
-    #        "base_url": "http://localhost:4000",
-    #    },
-    #    model_id="litellm_proxy/gemma3",
-    #)
+    model = OllamaModel(host=ollama_host, model_id=model_id)
     agent = Agent(model=model)
     st.session_state.agent = agent
 

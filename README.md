@@ -5,35 +5,22 @@ This repository is a tiny experiment where I put together few toolboxes together
 - `streamlit` for the interface,
 - `strands` for the agentic aspects,
 - `mlflow` for the trace and evaluation,
-- `litellm` proxy to support multiple backends and control budget,
-- `vllm` as default local LLM backend,
+- `ollama` as default local LLM backend,
 - `nginx` to add basic authentication and url remapping, 
 - `podman-compose` to orchestrate the services.
 
 ## Development mode
 
-No need to start everything when developing, just run vllm and the app:
-
-- in a first terminal, run the vllm server
+No need to start everything when developing, just run ollama and the app in a terminal:
 
 ```bash
-podman run \
-  --device nvidia.com/gpu=all \
-  -v ~/.cache/huggingface:/root/.cache/huggingface \
-  -p 8000:8000 \
-  --ipc=host \
-  docker.io/vllm/vllm-openai:latest --model Qwen/Qwen3-0.6B --reasoning-parser qwen3
+podman run -d --gpus all -v ollama:/root/.ollama -p 11434:11434 --name ollama-gpu docker.io/ollama/ollama:latest
+podman exec -it ollama-gpu ollama pull tinyllama:latest
+MODEL_ID="tinyllama:latest" pixi run chatbot
+podman stop ollama-gpu
 ```
 
-- in *another* terminal, start the app:
-
-```bash
-export MODEL_ID="hosted_vllm/Qwen/Qwen3-0.6B"
-export BASE_URL="http://localhost:8000/v1"
-pixi run chatbot
-```
-
-- (optional) in *another* terminal run mlflow server to check saved traces:
+Optionally, in *another* terminal run mlflow server to check saved traces:
 
 ```bash
 pixi run mlflow server
