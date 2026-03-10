@@ -38,5 +38,6 @@ pixi run mlflow server
 TODO setup docker-compose to run all services
 
 ```bash
-podman compose up
+podman compose up -d
+podman exec -it ollama-server ollama pull "phi3:mini-4k"
 ```

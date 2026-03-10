@@ -1,12 +1,12 @@
 services:
 
-  vllm:
-    image: docker.io/vllm/vllm-openai:latest
-    container_name: vllm-server
+  ollama:
+    image: docker.io/ollama/ollama:latest
+    container_name: ollama-server
     expose:
-      - "8000"
+      - "11434"
     volumes:
-      - ~/.cache/huggingface:/root/.cache/huggingface
+      - ollama_data:/root/.ollama
     ipc: host
     deploy:
       resources:
@@ -15,24 +15,28 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-    command: --model "Qwen/Qwen3-0.6B" --reasoning-parser qwen3
+    # TODO add healthcheck
 
   mlflow:
     image: ghcr.io/mlflow/mlflow:v3.10.1-full
     container_name: mlflow-server
+    # TODO add a volume for mlflow.db
     ports:
       - "5000:5000"  # TODO switch to expose once nginx is added
     command: mlflow server --host 0.0.0.0 --disable-security-middleware
+    # TODO add healthcheck
 
   chatbot:
     build: .
     ports:
       - "8501:8501"  # TODO switch to expose once nginx is added
     environment:
-      MODEL_ID: "hosted_vllm/Qwen/Qwen3-0.6B"
-      BASE_URL: "http://vllm:8000/v1"
+      MODEL_ID: "phi3:mini-4k"
+      OLLAMA_HOST: "http://ollama:11434"
       MLFLOW_TRACKING_URI: "http://mlflow:5000"
     depends_on:
-      - vllm
+      - ollama
       - mlflow
-      - litellm
+
+volumes:
+  ollama_data:

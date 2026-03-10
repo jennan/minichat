@@ -23,10 +23,13 @@ def process_message(user_input):
 mlflow.set_experiment("Test Experiment")
 mlflow.strands.autolog()
 
+# TODO add widget to enter username in sidebar
+# TODO add button to start new session (use uuid for session name)
+
 if "agent" not in st.session_state:
     model_id = os.environ["MODEL_ID"]
     ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-
+    # TODO pull model via REST API
     model = OllamaModel(host=ollama_host, model_id=model_id)
     agent = Agent(model=model)
     st.session_state.agent = agent
