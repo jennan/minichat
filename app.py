@@ -2,6 +2,7 @@ import os
 
 os.environ["MLFLOW_USE_DEFAULT_TRACER_PROVIDER"] = "false"
 
+import ollama
 import mlflow
 import streamlit as st
 from strands import Agent
@@ -29,7 +30,7 @@ mlflow.strands.autolog()
 if "agent" not in st.session_state:
     model_id = os.environ["MODEL_ID"]
     ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-    # TODO pull model via REST API
+    ollama.Client(ollama_host).pull(model_id)
     model = OllamaModel(host=ollama_host, model_id=model_id)
     agent = Agent(model=model)
     st.session_state.agent = agent

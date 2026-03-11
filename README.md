@@ -19,11 +19,10 @@ No need to start everything when developing, just run ollama and the app:
 pixi run ollama serve
 ```
 
-- in *another* terminal, pull a model and start the app
+- in *another* terminal, start the app
 
 ```bash
 export MODEL_ID="phi3:mini-4k"
-pixi run ollama pull "$MODEL_ID"
 pixi run chatbot
 ```
 
@@ -39,5 +38,4 @@ TODO setup docker-compose to run all services
 
 ```bash
 podman compose up -d
-podman exec -it ollama-server ollama pull "phi3:mini-4k"
 ```

@@ -189,10 +189,11 @@ environments:
     packages:
       linux-64:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/cuda-version-13.2-he2cc418_3.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/libgcc-15.2.0-he0feb66_18.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/libgomp-15.2.0-he0feb66_18.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/libstdcxx-15.2.0-h934c35e_18.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/ollama-0.17.7-cpu_hacd46da_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/ollama-0.17.0-cuda_130h9684303_0.conda
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
   build_number: 20
@@ -463,6 +464,15 @@ packages:
   - check-sdist ; extra == 'pep8test'
   - click>=8.0.1 ; extra == 'pep8test'
   requires_python: '>=3.8,!=3.9.0,!=3.9.1'
+- conda: https://conda.anaconda.org/conda-forge/noarch/cuda-version-13.2-he2cc418_3.conda
+  sha256: 64aebe8ccb3a2c3ff446d3c0c0e88ef4fdb069a5732c03539bf3a37243c4c679
+  md5: 45676e3dd76b30ec613f1f822d450eff
+  constrains:
+  - __cuda >=13
+  - cudatoolkit 13.2|13.2.*
+  license: LicenseRef-NVIDIA-End-User-License-Agreement
+  size: 21908
+  timestamp: 1773093709154
 - pypi: https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl
   name: cycler
   version: 0.12.1
@@ -1751,18 +1761,19 @@ packages:
   - httpx>=0.27
   - pydantic>=2.9
   requires_python: '>=3.8'
-- conda: https://conda.anaconda.org/conda-forge/linux-64/ollama-0.17.7-cpu_hacd46da_0.conda
-  sha256: 7d63ee852e80e438cf7631d91fbf5bd2134e1bb5583d438bde4ad30066cd1dd0
-  md5: 6e038f209f88173db94c3dfb11322438
+- conda: https://conda.anaconda.org/conda-forge/linux-64/ollama-0.17.0-cuda_130h9684303_0.conda
+  sha256: 5b6ce29a43f7ac73446ff87032433d6da3815a1971c0a4d460cea50a92e4e0f4
+  md5: af8e44d173616330d95cad297e3f4b8d
   depends:
+  - __glibc >=2.17
+  - cuda-version >=13.0,<14
   - libstdcxx >=14
   - libgcc >=14
-  - __glibc >=2.17,<3.0.a0
-  - __glibc >=2.17
+  - __glibc >=2.28,<3.0.a0
   license: MIT
   license_family: MIT
-  size: 13654756
-  timestamp: 1772792743255
+  size: 545660024
+  timestamp: 1771884077382
 - pypi: https://files.pythonhosted.org/packages/1d/2a/7dd3d207ec669cacc1f186fd856a0f61dbc255d24f6fdc1a6715d6051b0f/openai-1.109.1-py3-none-any.whl
   name: openai
   version: 1.109.1
