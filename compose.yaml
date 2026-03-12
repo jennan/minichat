@@ -15,28 +15,49 @@ services:
             - driver: nvidia
               count: all
               capabilities: [gpu]
-    # TODO add healthcheck
+    # healthcheck:
+    #   test: ["CMD", "ollama", "list"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 10s
 
   mlflow:
     image: ghcr.io/mlflow/mlflow:v3.10.1-full
     container_name: mlflow-server
     # TODO add a volume for mlflow.db
-    ports:
-      - "5000:5000"  # TODO switch to expose once nginx is added
+    expose:
+      - "5000"
     command: mlflow server --host 0.0.0.0 --disable-security-middleware
-    # TODO add healthcheck
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:5000"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+    #   start_period: 10s
 
   chatbot:
     build: .
     ports:
-      - "8501:8501"  # TODO switch to expose once nginx is added
+      - "8501"
     environment:
-      MODEL_ID: "phi3:mini-4k"
+      MODEL_ID: "ministral-3"
       OLLAMA_HOST: "http://ollama:11434"
       MLFLOW_TRACKING_URI: "http://mlflow:5000"
     depends_on:
       - ollama
       - mlflow
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:Z
+    depends_on:
+      - mlflow
+      - chatbot
 
 volumes:
   ollama_data:
