@@ -1,5 +1,6 @@
 import os
 import uuid
+from pathlib import Path
 
 os.environ["MLFLOW_USE_DEFAULT_TRACER_PROVIDER"] = "false"
 
@@ -8,6 +9,25 @@ import mlflow
 import streamlit as st
 from strands import Agent
 from strands.models.ollama import OllamaModel
+from strands import tool
+
+
+@tool
+def list_files():
+    """list files in current project folder"""
+    return sorted(str(p) for p in Path(__file__).parent.iterdir())
+
+
+@tool
+def read_file(filename):
+    """return the content of a file in current project folder"""
+    root_folder = Path(__file__).parent
+    filepath = (Path(__file__).parent / filename).resolve()
+    if not filepath.is_relative_to(root_folder):
+        raise ValueError(f"{filename} is not inside the project folder")
+    if not filepath.is_file():
+        raise ValueError(f"{filename} is not a file.")
+    return filepath.read_text()
 
 
 @mlflow.trace
@@ -34,7 +54,7 @@ if "agent" not in st.session_state or new_session:
     ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
     ollama.Client(ollama_host).pull(model_id)
     model = OllamaModel(host=ollama_host, model_id=model_id)
-    agent = Agent(model=model)
+    agent = Agent(model=model, tools=[list_files, read_file])
     st.session_state.agent = agent
     st.session_state.session_id = str(uuid.uuid4())
 
@@ -43,8 +63,11 @@ with st.sidebar:
 
 for message in st.session_state.agent.messages:
     with st.chat_message(message["role"]):
-        text = message["content"][0]["text"]
-        st.markdown(message["content"][0]["text"])
+        content = message["content"][0]
+        if "text" in content:
+            st.markdown(content["text"])
+        else:
+            st.json(content)
 
 if prompt := st.chat_input("Say something"):
     with st.chat_message("user"):
